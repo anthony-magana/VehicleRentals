@@ -175,6 +175,12 @@ export default function Feed(props) {
                 backgroundColor: "#f5f5f2",
                 borderRadius: 15,
               }}
+              onPress={() =>
+                props.navigation.navigate("Category", {
+                  users,
+                  category: "truck",
+                })
+              }
             >
               <FontAwesome5 name="truck-pickup" size={24} />
               <Text style={{ alignSelf: "center", paddingLeft: 5 }}>
@@ -195,6 +201,12 @@ export default function Feed(props) {
                 backgroundColor: "#f5f5f2",
                 borderRadius: 15,
               }}
+              onPress={() =>
+                props.navigation.navigate("Category", {
+                  users,
+                  category: "suv",
+                })
+              }
             >
               <FontAwesome5 name="truck" size={22} />
               <Text style={{ alignSelf: "center", paddingLeft: 5 }}>SUV's</Text>
