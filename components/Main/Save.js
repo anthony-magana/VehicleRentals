@@ -116,7 +116,7 @@ export default function Save(props) {
         <Picker
           selectedValue={type}
           style={{ height: 5, width: "50%" }}
-          onValueChange={(itemValue, itemIndex) => setType(itemValue)}
+          onValueChange={(itemValue) => setType(itemValue)}
         >
           <Picker.Item label="Sedan" value="sedan" />
           <Picker.Item label="Coupe" value="coupe" />

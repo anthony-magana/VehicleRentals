@@ -9,7 +9,7 @@ import UserSearchScreen from "./Main/UserSearch";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser, fetchUserPosts } from "../redux/actions/index";
+import { fetchUser, fetchUserPosts, clearData } from "../redux/actions/index";
 import firebase from "firebase";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -20,6 +20,7 @@ const EmptyScreen = () => {
 
 export class Main extends Component {
   componentDidMount() {
+    this.props.clearData();
     this.props.fetchUser();
     this.props.fetchUserPosts();
   }
@@ -130,6 +131,6 @@ const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
 });
 const mapDispatchProps = (dispatch) =>
-  bindActionCreators({ fetchUser, fetchUserPosts }, dispatch);
+  bindActionCreators({ fetchUser, fetchUserPosts, clearData }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

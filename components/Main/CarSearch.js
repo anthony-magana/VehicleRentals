@@ -17,14 +17,14 @@ require("firebase/firestore");
 export default function CarSearch({ users }) {
   const [models, setModels] = useState([]);
   const WIDTH = Dimensions.get("window").width;
-
-  const fetchModels = (userId, search) => {
-    firebase
+  let tmpModel = [];
+  const fetchModels = async (userId, search) => {
+    await firebase
       .firestore()
       .collection("posts")
       .doc(userId)
       .collection("userPosts")
-      .where("make", "==", search)
+      .where("model", "==", search)
       .get()
       .then((snapshot) => {
         let Models = snapshot.docs.map((doc) => {
@@ -32,7 +32,16 @@ export default function CarSearch({ users }) {
           const id = doc.id;
           return { id, ...data };
         });
-        setModels(Models);
+
+        if (Models.length === 0) {
+          return;
+        }
+        tmpModel = [...tmpModel, Models];
+        setModels(tmpModel);
+        console.log(models);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
   return (
@@ -65,7 +74,9 @@ export default function CarSearch({ users }) {
             placeholder="Search for Models"
             style={{ paddingTop: 5, paddingLeft: 5 }}
             onChangeText={(search) => {
-              users.map(() => fetchModels(users[0].id, search.toLowerCase()));
+              users.map((user) => {
+                fetchModels(user.id, search.toLowerCase());
+              });
             }}
           />
         </ScrollView>
@@ -77,6 +88,7 @@ export default function CarSearch({ users }) {
         snapToInterval={WIDTH - 60}
         pagingEnabled
         data={models}
+        keyExtractor={() => Math.random().toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
           // onPress={() =>
@@ -103,7 +115,7 @@ export default function CarSearch({ users }) {
                   paddingRight: 10,
                 }}
               >
-                ${item.price}
+                ${item[0].price}
               </Text>
             </View>
             <View
@@ -128,20 +140,21 @@ export default function CarSearch({ users }) {
                   padding: 5,
                 }}
               >
-                {item.brand.toUpperCase()} {item.make.toUpperCase()}
+                {item[0].brand.toUpperCase()} {item[0].model.toUpperCase()}
               </Text>
             </View>
-            <View style={{}}>
+            <View>
               <Image
                 style={{
-                  aspectRatio: 1 / 1,
+                  aspectRatio: 1,
                   width: "100%",
                   height: 250,
                   alignSelf: "center",
                   margin: 10,
                   borderRadius: 30,
                 }}
-                source={{ uri: item.downloadURL }}
+                source={{ uri: item[0].downloadURL }}
+                onError={({ nativeEvent: { error } }) => console.log(error)}
               />
             </View>
           </TouchableOpacity>

@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import CarSearch from "./CarSearch";
 
+import * as Location from "expo-location";
 import firebase from "firebase";
 require("firebase/firestore");
 
@@ -20,12 +22,43 @@ export default function Feed(props) {
   const [screenHeight, setScreenHeight] = useState(0);
   const [users, setUsers] = useState();
   const [loaded, setLoaded] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [city, setCity] = useState("Waiting...");
 
   const scrollEnable = screenHeight > HEIGHT - 95;
 
   useEffect(() => {
     fetchUsers();
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let locationn = await Location.getCurrentPositionAsync({});
+      setLocation(locationn);
+    })();
   }, []);
+
+  if (errorMsg) {
+    setCity(errorMsg);
+  } else if (location) {
+    Location.setGoogleApiKey("AIzaSyAeLG6-xQI0TWjPBR4LTTMUbcKxlIg18tY");
+    let loc = Location.reverseGeocodeAsync(location.coords)
+      .then((promise) => {
+        return promise;
+      })
+      .then((res) => {
+        return res[0];
+      })
+      .catch((error) => console.log(error));
+    loc.then((res) => {
+      setCity(res.city + ", " + res.region);
+      //console.log(city);
+    });
+  }
 
   const fetchUsers = () => {
     firebase
@@ -77,7 +110,7 @@ export default function Feed(props) {
           }}
         >
           <Ionicons name="location" size={24} color="#588DDE" />
-          <Text style={{ alignSelf: "center" }}>Your Location, Earth</Text>
+          <Text style={{ alignSelf: "center" }}>{city}</Text>
         </View>
         <View
           style={{

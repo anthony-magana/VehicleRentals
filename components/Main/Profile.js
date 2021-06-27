@@ -45,16 +45,16 @@ function Profile(props) {
         .orderBy("creation", "desc")
         .get()
         .then((snapshot) => {
-          let posts = snapshot.docs.map((doc) => {
+          let postdata = snapshot.docs.map((doc) => {
             const data = doc.data();
             const id = doc.id;
             return { id, ...data };
           });
           //console.log(posts);
-          setUserPosts(posts);
+          setUserPosts(postdata);
         });
     }
-  }, [props.route.params.uid]);
+  }, []);
 
   if (user === null) {
     return <View />;
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    aspectRatio: 1 / 1,
+    aspectRatio: 1,
   },
   imageContainer: {
     flex: 1 / 3,

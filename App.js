@@ -44,7 +44,7 @@ export default function App() {
         setLoaded(true);
       }
     });
-  });
+  }, []);
 
   if (!loaded) {
     return (
