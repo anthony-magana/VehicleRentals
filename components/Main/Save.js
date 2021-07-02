@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -7,7 +7,7 @@ import {
   Picker,
   ScrollView,
 } from "react-native";
-
+import * as Location from "expo-location";
 import firebase from "firebase";
 require("firebase/firestore");
 require("firebase/firebase-storage");
@@ -20,6 +20,38 @@ export default function Save(props) {
   const [year, setYear] = useState(null);
   const [price, setPrice] = useState(null);
   const [type, setType] = useState("");
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [city, setCity] = useState("Waiting...");
+  const [state, setState] = useState("Waiting...");
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let locationn = await Location.getCurrentPositionAsync({});
+      setLocation(locationn);
+    })();
+
+    if (location) {
+      Location.setGoogleApiKey("AIzaSyAeLG6-xQI0TWjPBR4LTTMUbcKxlIg18tY");
+      let loc = Location.reverseGeocodeAsync(location.coords)
+        .then((promise) => {
+          return promise;
+        })
+        .then((res) => {
+          return res[0];
+        })
+        .catch((error) => console.log(error));
+      loc.then((res) => {
+        setCity(res.city);
+        setState(res.region);
+      });
+    }
+  }, [type, price]);
 
   const uploadImage = async () => {
     const uri = props.route.params.image;
@@ -57,6 +89,8 @@ export default function Save(props) {
         year,
         model,
         brand,
+        city,
+        state,
         type,
         creation: firebase.firestore.FieldValue.serverTimestamp(),
       })
@@ -93,11 +127,7 @@ export default function Save(props) {
           placeholder="Year of Vehicle"
           keyboardType="numeric"
           style={{ padding: 10 }}
-          onChangeText={(Year) =>
-            Number.isInteger(parseInt(Year))
-              ? setYear(Year)
-              : alert("enter a number")
-          }
+          onChangeText={(Year) => setYear(Year)}
         />
       </View>
       <ScrollView keyboardShouldPersistTaps="handled" style={{ padding: 5 }}>
@@ -105,11 +135,7 @@ export default function Save(props) {
           placeholder="Price per day in USD"
           keyboardType="numeric"
           style={{ padding: 10 }}
-          onChangeText={(Price) =>
-            Number.isInteger(parseInt(Price))
-              ? setPrice(Price)
-              : alert("enter a number")
-          }
+          onChangeText={(Price) => setPrice(Price)}
         />
       </ScrollView>
       <View style={{ flex: 1, top: "-31%" }}>

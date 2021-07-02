@@ -29,7 +29,6 @@ export class Main extends Component {
       <Tab.Navigator
         initialRouteName="Feed"
         labeled={false}
-        // barStyle={{ backgroundColor: "#303030" }}
         activeColor="#FFFFFF"
         barStyle={{
           borderRadius: 30,

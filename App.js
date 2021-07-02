@@ -33,7 +33,8 @@ const firebaseConfig = {
 const Stack = createStackNavigator();
 export default function App() {
   const [loaded, setLoaded] = useState(false);
-  const [loggnedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
@@ -53,7 +54,7 @@ export default function App() {
       </View>
     );
   }
-  if (!loggnedIn) {
+  if (!loggedIn) {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Landing">
