@@ -7,6 +7,8 @@ import {
   Button,
   ScrollView,
   Platform,
+  Image,
+  FlatList,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
@@ -25,6 +27,8 @@ export default function Feed(props) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [city, setCity] = useState("Waiting...");
+  const [state, setState] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const scrollEnable = screenHeight > HEIGHT - 95;
 
@@ -55,7 +59,8 @@ export default function Feed(props) {
       })
       .catch((error) => console.log(error));
     loc.then((res) => {
-      setCity(res.city + ", " + res.region);
+      setCity(res.city);
+      setState(res.region);
       //console.log(city);
     });
   }
@@ -72,6 +77,38 @@ export default function Feed(props) {
         });
         setUsers(Users);
         setLoaded(true);
+      });
+  };
+  const btn = () => {
+    users.map((user) => {
+      fetchPosts(user.id);
+    });
+  };
+  let tmpPosts = [];
+  const fetchPosts = async (userId) => {
+    await firebase
+      .firestore()
+      .collection("posts")
+      .doc(userId)
+      .collection("userPosts")
+      .where("city", "==", city)
+      .get()
+      .then((snapshot) => {
+        let Posts = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          const id = doc.id;
+          return { id, ...data };
+        });
+
+        if (Posts.length === 0) {
+          return;
+        }
+        tmpPosts = [...tmpPosts, Posts];
+        setPosts(tmpPosts);
+        //console.log(tmpPosts);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
   if (!loaded) {
@@ -110,7 +147,9 @@ export default function Feed(props) {
           }}
         >
           <Ionicons name="location" size={24} color="#588DDE" />
-          <Text style={{ alignSelf: "center" }}>{city}</Text>
+          <Text style={{ alignSelf: "center" }}>
+            {city}, {state}
+          </Text>
         </View>
         <View
           style={{
@@ -258,8 +297,86 @@ export default function Feed(props) {
             <Text style={{ fontWeight: "600", fontSize: 18 }}>
               Nearby Car Rentals
             </Text>
-            <Button title="see more" />
+            <Button title="click here" onPress={btn} />
           </View>
+          <FlatList
+            horizontal={true}
+            snapToAlignment="center"
+            decelerationRate={0}
+            snapToInterval={WIDTH - 60}
+            pagingEnabled
+            data={posts}
+            keyExtractor={() => Math.random().toString()}
+            renderItem={({ item }) => (
+              <View>
+                <View style={{ flexDirection: "row" }}>
+                  {item.map((e) => (
+                    <TouchableOpacity
+                      key={e.id}
+                      style={{ padding: 20 }} // onPress={() =>
+                      //   props.navigation.navigate("Posts", { uid: item.id })
+                      // }
+                    >
+                      <View
+                        style={{
+                          position: "absolute",
+                          padding: 10,
+                          paddingLeft: 25,
+                          paddingRight: 25,
+                          right: 30,
+                          top: 30,
+                          borderRadius: 10,
+                          opacity: 0.62,
+                          backgroundColor: "#f5f5f2",
+                          zIndex: 1,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "black",
+                            textAlign: "center",
+                          }}
+                        >
+                          ${e.price}
+                        </Text>
+                      </View>
+                      <Image
+                        style={{
+                          aspectRatio: 1,
+                          width: WIDTH - 100,
+                          borderRadius: 30,
+                        }}
+                        source={{ uri: e.downloadURL }}
+                      />
+                      <View
+                        style={{
+                          position: "absolute",
+                          padding: 10,
+                          width: "100%",
+                          alignSelf: "center",
+                          bottom: 20,
+                          borderBottomRightRadius: 30,
+                          borderBottomLeftRadius: 30,
+                          opacity: 0.62,
+                          backgroundColor: "#f5f5f2",
+                          zIndex: 1,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "black",
+                            textAlign: "center",
+                          }}
+                        >
+                          {e.brand.toUpperCase()} {e.model.toUpperCase()}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+          />
         </View>
       </ScrollView>
     </View>

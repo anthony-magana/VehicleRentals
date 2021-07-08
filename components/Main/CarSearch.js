@@ -38,7 +38,7 @@ export default function CarSearch({ users }) {
         }
         tmpModel = [...tmpModel, Models];
         setModels(tmpModel);
-        console.log(models);
+        //console.log(models);
       })
       .catch((error) => {
         console.log(error);

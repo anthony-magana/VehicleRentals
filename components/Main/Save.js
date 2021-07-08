@@ -21,14 +21,13 @@ export default function Save(props) {
   const [price, setPrice] = useState(null);
   const [type, setType] = useState("");
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [city, setCity] = useState("Waiting...");
   const [state, setState] = useState("Waiting...");
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        alert("Permission to access location was denied");
         return;
       }
 
