@@ -21,3 +21,13 @@ Cross-platform mobile application built with React-Native and expo-cli while imp
 - [Google Maps API](https://cloud.google.com/) - API for geolocation
 
 ## 🎈 Features
+
+- User Authentication
+- Category buttons to list types of vehicles
+- Search for vehicle models
+- Current Location displayed
+- Profile with all posts
+- Logout button
+- User Search
+- Add post button to rent out vehicle
+- Displays vehicles near you
