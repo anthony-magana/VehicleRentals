@@ -15,7 +15,7 @@ Cross-platform mobile application built with React-Native and expo-cli while imp
 ## ⛏️ Built Using
 
 - [React Native](https://reactnative.dev/docs/getting-started) - Mobile App framework
-- [Expo CLI](https://docs.expo.io/workflow/expo-cli/) - Command Line app
+- [Expo CLI](https://docs.expo.io/workflow/expo-cli/) - Command Line Interface
 - [React Navigation](https://reactnavigation.org/docs/getting-started/) - React library
 - [Firebase/Firestore](https://firebase.google.com/docs/guides) - Googles mobile platform and NoSQL database
 - [Google Maps API](https://cloud.google.com/) - API for geolocation
