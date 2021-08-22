@@ -47,6 +47,7 @@ export default function Category(props) {
         }
         temp = [...temp, Models];
         setModels(temp);
+        //console.log(temp);
       })
       .catch(() => {
         console.log("error");
@@ -71,7 +72,7 @@ export default function Category(props) {
         backgroundColor: "#fffff8",
       }}
     >
-      <View style={{ marginTop: 30 }}>
+      <View style={{ marginTop: 20 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text
             style={{
@@ -96,20 +97,12 @@ export default function Category(props) {
           >
             {category.toUpperCase()}
           </Text>
-          {/* <Button
-            title="Search"
-            onPress={() => {
-              call();
-              setLoaded(true);
-            }}
-          /> */}
         </View>
 
-        {/* {console.log(typeof models[0])} */}
         {typeof models[0] === "undefined" ? (
           <Text
             style={{
-              padding: 10,
+              paddingTop: 10,
               fontSize: 14,
               fontWeight: "400",
               alignSelf: "center",
@@ -118,7 +111,24 @@ export default function Category(props) {
             Sorry, No vehicles under this category at this time.
           </Text>
         ) : (
-          <View></View>
+          <View>
+            {models.map((obj) =>
+              obj.map((post) => (
+                <View key={post.id} style={{ padding: 10 }}>
+                  <Text>
+                    Vehicle: {post.brand.toUpperCase()}{" "}
+                    {post.model.toUpperCase()}
+                  </Text>
+                  <Text>Type: {post.type.toUpperCase()}</Text>
+                  <Text>Year: {post.year}</Text>
+                  <Text>Price: ${post.price}</Text>
+                  <Text>City: {post.city.toUpperCase()}</Text>
+                  <Text>Description: {post.description}</Text>
+                  <Text>Posted: {Date(post.creation.seconds)}</Text>
+                </View>
+              ))
+            )}
+          </View>
         )}
       </View>
     </View>

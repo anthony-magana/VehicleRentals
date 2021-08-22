@@ -17,6 +17,7 @@ import MainScreen from "./components/Main";
 import AddScreen from "./components/Main/Add";
 import SaveScreen from "./components/Main/Save";
 import CategoryScreen from "./components/Main/Category";
+import PostScreen from "./components/Main/Posts";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4xCOvEZwVxXr5KEqJPI7OAGmvqB-rtBI",
@@ -88,6 +89,13 @@ export default function App() {
           <Stack.Screen
             name="Save"
             component={SaveScreen}
+            options={{
+              headerBackTitle: false,
+            }}
+          />
+          <Stack.Screen
+            name="Posts"
+            component={PostScreen}
             options={{
               headerBackTitle: false,
             }}

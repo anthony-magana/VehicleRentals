@@ -313,9 +313,8 @@ export default function Feed(props) {
                   {item.map((e) => (
                     <TouchableOpacity
                       key={e.id}
-                      style={{ padding: 20 }} // onPress={() =>
-                      //   props.navigation.navigate("Posts", { uid: item.id })
-                      // }
+                      style={{ padding: 20 }}
+                      onPress={() => props.navigation.navigate("Posts", { e })}
                     >
                       <View
                         style={{
