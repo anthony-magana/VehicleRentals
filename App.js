@@ -4,6 +4,7 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import firebase from "firebase/app";
+import FIREBASE_CONFIG from "./apikey";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./redux/reducers";
@@ -19,15 +20,7 @@ import SaveScreen from "./components/Main/Save";
 import CategoryScreen from "./components/Main/Category";
 import PostScreen from "./components/Main/Posts";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA4xCOvEZwVxXr5KEqJPI7OAGmvqB-rtBI",
-  authDomain: "vehiclerentals-e4dbf.firebaseapp.com",
-  projectId: "vehiclerentals-e4dbf",
-  storageBucket: "vehiclerentals-e4dbf.appspot.com",
-  messagingSenderId: "424405675451",
-  appId: "1:424405675451:web:b6eeec85c6cc811482a89e",
-  measurementId: "G-WZ534K6ZRW",
-};
+const firebaseConfig = FIREBASE_CONFIG;
 
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
